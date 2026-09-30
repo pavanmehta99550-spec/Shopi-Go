@@ -1375,30 +1375,32 @@ export function App() {
               </div>
             </div>
 
-            {/* Global Universal Link Share Bar */}
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 font-bold shrink-0">
-                  🌐
-                </div>
-                <div>
-                  <div className="font-bold text-xs text-white font-mono">Public Storefront Link (Opens Everywhere Worldwide)</div>
-                  <div className="text-[11px] text-slate-400 font-mono underline truncate max-w-sm sm:max-w-md">
-                    https://eng-scholar-j07pf.web.app
+            {/* Global Universal Link Share Bar - Visible ONLY to logged-in Suppliers */}
+            {currentUser.isLoggedIn && currentUser.role === 'supplier' && (
+              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 font-bold shrink-0">
+                    🌐
+                  </div>
+                  <div>
+                    <div className="font-bold text-xs text-white font-mono">Public Storefront Link (Opens Everywhere Worldwide)</div>
+                    <div className="text-[11px] text-slate-400 font-mono underline truncate max-w-sm sm:max-w-md">
+                      https://eng-scholar-j07pf.web.app
+                    </div>
                   </div>
                 </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText("https://eng-scholar-j07pf.web.app");
+                    setSuccessMsg("📋 Public Shared Link copied to clipboard! Send to anyone on WhatsApp, Instagram, or Telegram.");
+                    setTimeout(() => setSuccessMsg(null), 4000);
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-mono font-bold text-xs rounded-xl shadow-lg shadow-pink-600/30 cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <span>📋 Copy Universal Link</span>
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("https://eng-scholar-j07pf.web.app");
-                  setSuccessMsg("📋 Public Shared Link copied to clipboard! Send to anyone on WhatsApp, Instagram, or Telegram.");
-                  setTimeout(() => setSuccessMsg(null), 4000);
-                }}
-                className="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-mono font-bold text-xs rounded-xl shadow-lg shadow-pink-600/30 cursor-pointer flex items-center gap-1.5 shrink-0"
-              >
-                <span>📋 Copy Universal Link</span>
-              </button>
-            </div>
+            )}
 
             {/* Buyer Categories Filter */}
             <div className="flex overflow-x-auto gap-2 pb-2">
