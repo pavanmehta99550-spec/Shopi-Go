@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // --- Primitives & Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    match /test/{docId} {
+      allow get, list: if true;
+    }
+
+    // Withdrawals collection - public audit trail for explorer & user verification
+    match /withdrawals/{withdrawalId} {
+      allow get, list: if true;
+      allow create: if isValidId(withdrawalId) &&
+        incoming().keys().hasAll(['id', 'txId', 'coin', 'address', 'grossAmount', 'adminFeeAmount', 'netReceived', 'status', 'timestamp']) &&
+        incoming().grossAmount is number &&
+        incoming().adminFeeAmount is number &&
+        incoming().netReceived is number &&
+        incoming().address is string &&
+        incoming().address.size() >= 8 &&
+        incoming().address.size() <= 128 &&
+        incoming().txId is string &&
+        incoming().txId.size() <= 128;
+      allow update, delete: if false; // immutable audit trail
+    }
+
+    // Admin revenue ledger
+    match /admin_revenue/{docId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(docId) &&
+        incoming().totalAdminFeeBtc is number &&
+        incoming().totalAdminFeeBtc >= 0;
+      allow delete: if false;
+    }
+
+    // Stratum mining shares ledger
+    match /mining_shares/{shareId} {
+      allow get, list: if true;
+      allow create: if isValidId(shareId) &&
+        incoming().coin is string &&
+        incoming().difficulty is number &&
+        incoming().status in ['ACCEPTED', 'REJECTED'];
+      allow update, delete: if false;
+    }
+
+    // Global deny for everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

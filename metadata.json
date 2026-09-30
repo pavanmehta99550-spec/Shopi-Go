@@ -1,0 +1,8 @@
+{
+  "name": "ShopiGo",
+  "description": "Professional multi-vendor wholesale and supplier panel with live storefront, bulk order fulfillment, and AWB tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "Cryptocurrency payout request and confirmed blockchain transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique withdrawal identifier" },
+        "txId": { "type": "string", "description": "64-character transaction hash or mempool ID" },
+        "coin": { "type": "string", "description": "Target cryptocurrency ticker (BTC, LTC, SOL, USDT)" },
+        "network": { "type": "string", "description": "Blockchain network name" },
+        "address": { "type": "string", "description": "Destination recipient wallet address" },
+        "grossAmount": { "type": "number", "description": "Total requested withdrawal amount" },
+        "adminFeeAmount": { "type": "number", "description": "5% protocol administrator commission fee" },
+        "netReceived": { "type": "number", "description": "Net amount disbursed to user wallet after fee" },
+        "status": { "type": "string", "description": "Status of the payout (e.g. CONFIRMED, PENDING)" },
+        "timestamp": { "type": "string", "format": "date-time", "description": "ISO timestamp of transaction" },
+        "explorerUrl": { "type": "string", "description": "Public blockchain mempool explorer URL" }
+      },
+      "required": ["id", "txId", "coin", "address", "grossAmount", "adminFeeAmount", "netReceived", "status", "timestamp"]
+    },
+    "AdminRevenue": {
+      "title": "AdminRevenue",
+      "description": "Aggregated 5% platform protocol revenue summary and audit ledger",
+      "type": "object",
+      "properties": {
+        "totalAdminFeeBtc": { "type": "number", "description": "Cumulative total admin fee retained in BTC" },
+        "lastUpdated": { "type": "string", "format": "date-time", "description": "Last ledger reconciliation timestamp" }
+      },
+      "required": ["totalAdminFeeBtc", "lastUpdated"]
+    },
+    "MiningShare": {
+      "title": "MiningShare",
+      "description": "Stratum protocol submitted share record with difficulty and verification",
+      "type": "object",
+      "properties": {
+        "shareId": { "type": "string", "description": "Unique share ID" },
+        "coin": { "type": "string", "description": "Target coin mined" },
+        "hashrate": { "type": "number", "description": "Hashrate at time of share submission" },
+        "difficulty": { "type": "number", "description": "Work difficulty" },
+        "status": { "type": "string", "description": "ACCEPTED or REJECTED" },
+        "timestamp": { "type": "string", "format": "date-time", "description": "Timestamp of share submission" }
+      },
+      "required": ["shareId", "coin", "difficulty", "status", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/withdrawals/{withdrawalId}": {
+      "schema": "Withdrawal",
+      "description": "Collection of user withdrawal records and proof of transfer"
+    },
+    "/admin_revenue/{docId}": {
+      "schema": "AdminRevenue",
+      "description": "Ledger of administrator accumulated commission revenue"
+    },
+    "/mining_shares/{shareId}": {
+      "schema": "MiningShare",
+      "description": "Stratum bridge verified accepted work shares"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ShopiGo" />
+    <meta name="description" content="ShopiGo - Professional multi-vendor wholesale and supplier panel with live storefront, bulk order fulfillment, and AWB tracking." />
+    <meta property="og:title" content="ShopiGo Supplier Panel & Storefront" />
+    <meta property="og:description" content="ShopiGo - Professional multi-vendor wholesale and supplier panel with live storefront, bulk order fulfillment, and AWB tracking." />
+    <link rel="manifest" href="/manifest.json" />
+    <title>ShopiGo - Supplier Panel & Customer Storefront</title>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').catch(function(err) {
+            console.log('SW registration failed: ', err);
+          });
+        });
+      }
+    </script>
+    <script>
+      (function() {
+        function isExtensionOrWeb3Error(err) {
+          if (!err) return false;
+          var str = typeof err === 'string' ? err : (err.message || err.reason?.message || err.reason || String(err));
+          return /metamask|ethereum|web3|wallet|chrome-extension|moz-extension/i.test(str);
+        }
+
+        window.addEventListener('unhandledrejection', function(event) {
+          if (isExtensionOrWeb3Error(event.reason)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+
+        window.addEventListener('error', function(event) {
+          if (isExtensionOrWeb3Error(event.error || event.message)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+
+        var origOnError = window.onerror;
+        window.onerror = function(msg, url, line, col, error) {
+          if (isExtensionOrWeb3Error(msg) || isExtensionOrWeb3Error(error) || (url && /extension/i.test(url))) {
+            return true;
+          }
+          if (origOnError) return origOnError.apply(this, arguments);
+        };
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

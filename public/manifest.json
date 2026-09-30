@@ -1,0 +1,23 @@
+{
+  "short_name": "ShopiGo",
+  "name": "ShopiGo Wholesale & Reselling App",
+  "description": "ShopiGo - Professional Wholesale & Reselling Platform with 0% Supplier Commission, Direct Reseller Margins & Real-Time Shipping Tracking.",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=192&q=80",
+      "type": "image/jpeg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=512&q=80",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait",
+  "categories": ["shopping", "business", "productivity"]
+}
