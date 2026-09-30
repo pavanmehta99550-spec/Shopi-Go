@@ -769,64 +769,68 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      {/* Universal Sharing & Public Link Banner */}
-      <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border-b border-blue-500/40 px-4 py-2 flex flex-wrap items-center justify-between text-xs font-mono gap-2">
-        <div className="flex items-center gap-2">
-          <span className="text-cyan-400 font-bold">📲 APP SHARE & PUBLIC ACCESS GUIDE:</span>
-          <span className="text-slate-300 text-[11px]">
-            To share on mobile without 403 error, tap <span className="text-white font-bold">"📱 Install App"</span> to add to Home Screen or deploy to Vercel/Netlify.
-          </span>
+      {/* Universal Sharing & Public Link Banner - Visible to Supplier only */}
+      {currentUser.isLoggedIn && currentUser.role === 'supplier' && (
+        <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border-b border-blue-500/40 px-4 py-2 flex flex-wrap items-center justify-between text-xs font-mono gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-cyan-400 font-bold">📲 APP SHARE & PUBLIC ACCESS GUIDE:</span>
+            <span className="text-slate-300 text-[11px]">
+              To share on mobile without 403 error, tap <span className="text-white font-bold">"📱 Install App"</span> to add to Home Screen or deploy to Vercel/Netlify.
+            </span>
+          </div>
+          <button
+            onClick={() => setShowPublicLinkModal(true)}
+            className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg cursor-pointer flex items-center gap-1 shrink-0"
+          >
+            <span>🌐 How To Share App Publicly</span>
+          </button>
         </div>
-        <button
-          onClick={() => setShowPublicLinkModal(true)}
-          className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg cursor-pointer flex items-center gap-1 shrink-0"
-        >
-          <span>🌐 How To Share App Publicly</span>
-        </button>
-      </div>
+      )}
 
-      {/* Top Universal Mode Switcher Bar (Supplier Panel vs Customer Storefront) */}
-      <div className="bg-gradient-to-r from-pink-950 via-slate-900 to-slate-950 border-b border-pink-500/30 px-6 py-2.5 flex items-center justify-between text-xs font-mono">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-pink-400" />
-          <span className="text-slate-300">Unified Meesho Platform:</span>
+      {/* Top Universal Mode Switcher Bar - ONLY visible for logged-in Suppliers */}
+      {currentUser.isLoggedIn && currentUser.role === 'supplier' && (
+        <div className="bg-gradient-to-r from-pink-950 via-slate-900 to-slate-950 border-b border-pink-500/30 px-6 py-2.5 flex items-center justify-between text-xs font-mono">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-pink-400" />
+            <span className="text-slate-300">Supplier Panel Controls:</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setAppMode('supplier')}
+              className={`px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                appMode === 'supplier' 
+                  ? 'bg-pink-600 text-white shadow-lg shadow-pink-600/30' 
+                  : 'bg-slate-900 text-slate-400 hover:text-white'
+              }`}
+            >
+              <Store className="w-3.5 h-3.5" />
+              <span>Supplier Panel Mode</span>
+            </button>
+            <button
+              onClick={() => { setAppMode('buyer'); setShowHomePageLogin(false); }}
+              className={`px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                appMode === 'buyer' && !showHomePageLogin
+                  ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30' 
+                  : 'bg-slate-900 text-slate-400 hover:text-white'
+              }`}
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span>Shared Storefront Link (Customer View)</span>
+            </button>
+            <button
+              onClick={() => setShowHomePageLogin(true)}
+              className={`px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                showHomePageLogin
+                  ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/30' 
+                  : 'bg-slate-900 text-slate-400 hover:text-white'
+              }`}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>🔐 Login Page</span>
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setAppMode('supplier')}
-            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              appMode === 'supplier' 
-                ? 'bg-pink-600 text-white shadow-lg shadow-pink-600/30' 
-                : 'bg-slate-900 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Store className="w-3.5 h-3.5" />
-            <span>Supplier Panel Mode</span>
-          </button>
-          <button
-            onClick={() => { setAppMode('buyer'); setShowHomePageLogin(false); }}
-            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              appMode === 'buyer' && !showHomePageLogin
-                ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30' 
-                : 'bg-slate-900 text-slate-400 hover:text-white'
-            }`}
-          >
-            <ShoppingBag className="w-3.5 h-3.5" />
-            <span>Shared Storefront Link (Customer View)</span>
-          </button>
-          <button
-            onClick={() => setShowHomePageLogin(true)}
-            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-              showHomePageLogin
-                ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/30' 
-                : 'bg-slate-900 text-slate-400 hover:text-white'
-            }`}
-          >
-            <User className="w-3.5 h-3.5" />
-            <span>🔐 Login Page</span>
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* Top Header - ShopiGo Official Branding Logo */}
       <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
@@ -846,9 +850,11 @@ export function App() {
               <div className="flex items-center tracking-tight">
                 <span className="font-black text-lg text-blue-400">Shopi</span>
                 <span className="font-black text-lg text-orange-500">Go</span>
-                <span className="ml-2 text-[10px] font-mono bg-blue-500/10 border border-blue-500/30 text-blue-400 px-2 py-0.5 rounded-full">
-                  {appMode === 'supplier' ? 'Supplier Panel' : 'Customer Storefront'}
-                </span>
+                {currentUser.isLoggedIn && currentUser.role === 'supplier' && (
+                  <span className="ml-2 text-[10px] font-mono bg-blue-500/10 border border-blue-500/30 text-blue-400 px-2 py-0.5 rounded-full">
+                    {appMode === 'supplier' ? 'Supplier Panel' : 'Customer Storefront'}
+                  </span>
+                )}
               </div>
               <div className="text-[9px] font-mono tracking-widest text-slate-400 uppercase">
                 FAST • RELIABLE • SHOPPING
@@ -858,13 +864,15 @@ export function App() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowPublicLinkModal(true)}
-            className="px-3.5 py-2 bg-amber-950/60 border border-amber-500/40 hover:bg-amber-900/60 text-amber-300 font-mono font-bold text-xs rounded-xl shadow-lg cursor-pointer flex items-center gap-1.5 transition-all"
-            title="How to fix 403 Access Denied and share public link"
-          >
-            <span>🌐 Why 403? Public Link</span>
-          </button>
+          {currentUser.isLoggedIn && currentUser.role === 'supplier' && (
+            <button
+              onClick={() => setShowPublicLinkModal(true)}
+              className="px-3.5 py-2 bg-amber-950/60 border border-amber-500/40 hover:bg-amber-900/60 text-amber-300 font-mono font-bold text-xs rounded-xl shadow-lg cursor-pointer flex items-center gap-1.5 transition-all"
+              title="How to fix 403 Access Denied and share public link"
+            >
+              <span>🌐 Why 403? Public Link</span>
+            </button>
+          )}
 
           {!isAppInstalled && (
             <button
