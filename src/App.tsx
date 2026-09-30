@@ -2417,9 +2417,13 @@ export function App() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white font-mono">
-                    {authMode === 'login' ? 'ShopiGo Multi-Role Login' : 'Create ShopiGo Account'}
+                    {authRole === 'supplier' 
+                      ? (authMode === 'login' ? 'Supplier / Seller Login' : 'Register New Supplier') 
+                      : (authMode === 'login' ? 'Customer Account Login' : 'Create Customer Account')}
                   </h3>
-                  <p className="text-xs text-slate-400">Select account type & enter mobile details</p>
+                  <p className="text-xs text-slate-400">
+                    {authRole === 'supplier' ? 'Access your factory catalog & payout dashboard' : 'Enter mobile details to login or order'}
+                  </p>
                 </div>
               </div>
               <button 
@@ -2430,94 +2434,12 @@ export function App() {
               </button>
             </div>
 
-            {/* Account Role Selector */}
-            <div className="grid grid-cols-3 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 font-mono text-xs">
-              <button
-                type="button"
-                onClick={() => { setAuthRole('supplier'); setOtpSent(false); }}
-                className={`py-2 px-3 rounded-xl font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
-                  authRole === 'supplier' 
-                    ? 'bg-pink-600 text-white shadow-md shadow-pink-600/30' 
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <Store className="w-4 h-4" />
-                <span>📦 Supplier</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => { setAuthRole('reseller'); setOtpSent(false); }}
-                className={`py-2 px-3 rounded-xl font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
-                  authRole === 'reseller' 
-                    ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30' 
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <Zap className="w-4 h-4" />
-                <span>🛍️ Reseller</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => { setAuthRole('customer'); setOtpSent(false); }}
-                className={`py-2 px-3 rounded-xl font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
-                  authRole === 'customer' 
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' 
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <ShoppingBag className="w-4 h-4" />
-                <span>🛒 Customer</span>
-              </button>
-            </div>
-
             {/* Quick Demo Login Preset Buttons */}
             <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
               <div className="text-[11px] font-mono font-bold text-slate-400 flex items-center justify-between">
                 <span>⚡ Instant One-Click Demo Logins:</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-mono">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCurrentUser({
-                      id: 'usr_demo_supp',
-                      name: 'Kolkata Wholesale Textile Mill',
-                      role: 'supplier',
-                      phone: '+91 98301 22910',
-                      email: 'supplier.kolkata@shopigo.in',
-                      businessName: 'Kolkata Wholesale Mill',
-                      isLoggedIn: true
-                    });
-                    setAppMode('supplier');
-                    setShowLoginModal(false);
-                    setSuccessMsg("Logged in as Supplier: Kolkata Wholesale Mill");
-                    setTimeout(() => setSuccessMsg(null), 3000);
-                  }}
-                  className="p-2 rounded-xl bg-pink-950/40 border border-pink-500/30 text-pink-300 hover:bg-pink-900/50 font-bold cursor-pointer text-left truncate"
-                >
-                  ⚡ Demo Supplier
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCurrentUser({
-                      id: 'usr_demo_resell',
-                      name: 'Priya Reseller Hub',
-                      role: 'reseller',
-                      phone: '+91 99887 76655',
-                      email: 'priya.reseller@shopigo.in',
-                      city: 'Jaipur, Rajasthan',
-                      isLoggedIn: true
-                    });
-                    setAppMode('buyer');
-                    setShowLoginModal(false);
-                    setSuccessMsg("Logged in as Reseller: Priya Reseller Hub");
-                    setTimeout(() => setSuccessMsg(null), 3000);
-                  }}
-                  className="p-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-900/50 font-bold cursor-pointer text-left truncate"
-                >
-                  ⚡ Demo Reseller
-                </button>
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <button
                   type="button"
                   onClick={() => {
@@ -2535,9 +2457,30 @@ export function App() {
                     setSuccessMsg("Logged in as Customer: Rahul Sharma");
                     setTimeout(() => setSuccessMsg(null), 3000);
                   }}
-                  className="p-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-900/50 font-bold cursor-pointer text-left truncate"
+                  className="p-2.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-900/50 font-bold cursor-pointer text-center"
                 >
-                  ⚡ Demo Customer
+                  🛒 Login as Customer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentUser({
+                      id: 'usr_demo_supp',
+                      name: 'Kolkata Wholesale Textile Mill',
+                      role: 'supplier',
+                      phone: '+91 98301 22910',
+                      email: 'supplier.kolkata@shopigo.in',
+                      businessName: 'Kolkata Wholesale Mill',
+                      isLoggedIn: true
+                    });
+                    setAppMode('supplier');
+                    setShowLoginModal(false);
+                    setSuccessMsg("Logged in as Supplier: Kolkata Wholesale Mill");
+                    setTimeout(() => setSuccessMsg(null), 3000);
+                  }}
+                  className="p-2.5 rounded-xl bg-pink-950/40 border border-pink-500/30 text-pink-300 hover:bg-pink-900/50 font-bold cursor-pointer text-center"
+                >
+                  📦 Login as Supplier
                 </button>
               </div>
             </div>
@@ -2745,15 +2688,36 @@ export function App() {
               </form>
             )}
 
-            <div className="border-t border-slate-800 pt-3 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>{authMode === 'login' ? "Don't have an account?" : "Already registered?"}</span>
-              <button
-                type="button"
-                onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
-                className="text-pink-400 font-bold underline hover:text-pink-300 cursor-pointer"
-              >
-                {authMode === 'login' ? 'Create New Account' : 'Login Existing Account'}
-              </button>
+            <div className="border-t border-slate-800 pt-3.5 space-y-3 text-xs font-mono">
+              <div className="flex items-center justify-between text-slate-400">
+                <span>{authMode === 'login' ? "Don't have an account?" : "Already registered?"}</span>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                  className="text-pink-400 font-bold underline hover:text-pink-300 cursor-pointer"
+                >
+                  {authMode === 'login' ? 'Create New Account' : 'Login Existing Account'}
+                </button>
+              </div>
+
+              {/* Bottom Supplier Registration / Login Switcher */}
+              <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+                <div className="text-[11px] text-slate-300 flex items-center gap-1.5 font-bold">
+                  <Store className="w-4 h-4 text-pink-400 shrink-0" />
+                  <span>{authRole === 'supplier' ? 'Are you a Customer?' : 'Are you a Manufacturer / Seller?'}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const nextRole = authRole === 'supplier' ? 'customer' : 'supplier';
+                    setAuthRole(nextRole);
+                    setOtpSent(false);
+                  }}
+                  className="w-full sm:w-auto px-3.5 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold rounded-xl text-[11px] cursor-pointer shadow-md shadow-pink-600/30 flex items-center justify-center gap-1 shrink-0"
+                >
+                  {authRole === 'supplier' ? '🛒 Switch to Customer Login' : '🏭 Signup as Supplier'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
